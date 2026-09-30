@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ApologyModal from './ApologyModal';
 import InvoiceModal from './InvoiceModal';
 
-export default function ReceptionistPortal({ onDataChange, hotelData }) {
+export default function ReceptionistPortal({ onDataChange, hotelData, preFillData }) {
   // Form State
   const [formData, setFormData] = useState({
     name: '',
@@ -15,6 +15,16 @@ export default function ReceptionistPortal({ onDataChange, hotelData }) {
     frequentGuestId: '',
     reservationType: 'OnSpot',
   });
+
+  // Auto-populate when preFillData is received from Hero bar or Suite Showcase
+  useEffect(() => {
+    if (preFillData) {
+      setFormData(prev => ({
+        ...prev,
+        ...preFillData
+      }));
+    }
+  }, [preFillData]);
 
   // Frequent Guest Verification State
   const [frequentGuestInfo, setFrequentGuestInfo] = useState(null);

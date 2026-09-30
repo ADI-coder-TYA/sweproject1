@@ -6,11 +6,17 @@ import ReceptionistPortal from './components/ReceptionistPortal';
 import CateringPortal from './components/CateringPortal';
 import ManagerPortal from './components/ManagerPortal';
 import BillsLedger from './components/BillsLedger';
+import ApologyModal from './components/ApologyModal';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('receptionist');
   const [hotelData, setHotelData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Cross-component pre-fill & apology modal state
+  const [preFillData, setPreFillData] = useState(null);
+  const [heroApologyData, setHeroApologyData] = useState(null);
+  const [showHeroApology, setShowHeroApology] = useState(false);
 
   const heroRef = useRef(null);
   const portalRef = useRef(null);
@@ -40,9 +46,23 @@ export default function App() {
     }
   };
 
-  const handleSelectSuite = (bed, ac) => {
+  const handleProceedToBooking = (criteria) => {
+    setPreFillData(criteria);
     setActiveTab('receptionist');
-    scrollToWorkstation();
+    setTimeout(() => {
+      if (portalRef.current) {
+        portalRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 60);
+  };
+
+  const handleShowApology = (data) => {
+    setHeroApologyData(data);
+    setShowHeroApology(true);
+  };
+
+  const handleSelectSuite = (bed, ac) => {
+    handleProceedToBooking({ bedType: bed, acType: ac });
   };
 
   return (
@@ -55,10 +75,11 @@ export default function App() {
         onBookClick={scrollToWorkstation}
       />
 
-      {/* Cinematic Hero Container with Integrated Availability Bar */}
+      {/* Cinematic Hero Container with Integrated Interactive Availability Bar */}
       <HeroSection 
         heroRef={heroRef}
-        onSearchAvailability={scrollToWorkstation} 
+        onProceedToBooking={handleProceedToBooking}
+        onShowApology={handleShowApology}
       />
 
       {/* Main Container */}
@@ -82,6 +103,7 @@ export default function App() {
                 <ReceptionistPortal 
                   hotelData={hotelData} 
                   onDataChange={fetchHotelData} 
+                  preFillData={preFillData}
                 />
               )}
 
@@ -106,6 +128,17 @@ export default function App() {
           </>
         )}
       </main>
+
+      {/* Global Apology Modal for Hero Bar search */}
+      <ApologyModal
+        isOpen={showHeroApology}
+        onClose={() => setShowHeroApology(false)}
+        apologyData={heroApologyData}
+        onSelectCategory={(bed, ac) => {
+          handleProceedToBooking({ bedType: bed, acType: ac });
+          setShowHeroApology(false);
+        }}
+      />
 
       {/* Editorial Charcoal Footer */}
       <footer style={{

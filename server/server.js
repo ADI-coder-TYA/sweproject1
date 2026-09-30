@@ -59,6 +59,32 @@ app.get('/api/rooms/categories', (req, res) => {
   }
 });
 
+app.post('/api/rooms/check-availability', (req, res) => {
+  try {
+    const { bedType, acType, duration = 1 } = req.body;
+    const availableRooms = HotelService.checkAvailability(bedType, acType);
+    if (!availableRooms || availableRooms.length === 0) {
+      return res.json({
+        available: false,
+        apologyMessage: `We sincerely apologize, but no ${bedType || 'selected'} Bed (${acType || ''}) suites are currently available for the requested schedule.`,
+        availableCategories: HotelService.getRoomCategoryAvailability(),
+      });
+    }
+    const sample = availableRooms[0];
+    res.json({
+      available: true,
+      availableCount: availableRooms.length,
+      sampleRoom: sample,
+      rate: sample.rate,
+      totalEstimated: sample.rate * Number(duration),
+      bedType: sample.bedType,
+      acType: sample.acType,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 3. Reservations & Room Allotment (Sequence Diagram 1)
 app.post('/api/reservations', (req, res) => {
   try {
