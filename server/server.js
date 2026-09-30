@@ -94,12 +94,14 @@ app.post('/api/reservations', (req, res) => {
       return res.status(400).json({ error: 'Name, Bed Type, AC Type, and Duration of Stay are required.' });
     }
 
+    const advance = advancePaid !== undefined ? advancePaid : (req.body.advanceAmount || 0);
+
     const result = HotelService.makeReservation({
       name,
       phone: phone || 'N/A',
       arrivalTime,
       durationOfStay: Number(durationOfStay),
-      advancePaid: Number(advancePaid) || 0,
+      advancePaid: Number(advance) || 0,
       bedType,
       acType,
       frequentGuestId: frequentGuestId ? frequentGuestId.trim() : null,
@@ -115,6 +117,12 @@ app.post('/api/reservations', (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// Alias for reservation allotment
+app.post('/api/reservations/reserve-or-allot', (req, res, next) => {
+  req.url = '/api/reservations';
+  app._router.handle(req, res, next);
 });
 
 app.get('/api/reservations', (req, res) => {

@@ -59,39 +59,10 @@ export default function SuiteShowcase({ onSelectSuite, tariffs = [] }) {
             color: 'var(--text-secondary)',
             fontSize: '0.92rem',
             lineHeight: '1.8',
-            marginBottom: '20px'
+            marginBottom: '0'
           }}>
             Every suite at The Grand Horizon is conceived as a self-contained sanctuary. Floor-to-ceiling architectural glazing frames panoramic vistas of the surrounding terrain, while natural travertine stone, tactile linens, and handcrafted joinery foster an atmosphere of effortless tranquility.
           </p>
-          <div style={{
-            display: 'flex',
-            gap: '32px',
-            borderTop: '1px solid var(--border-hairline)',
-            paddingTop: '20px',
-            fontSize: '0.78rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.15em',
-            color: 'var(--text-secondary)'
-          }}>
-            <div>
-              <strong style={{ display: 'block', fontSize: '1.3rem', color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', fontWeight: '400' }}>
-                24
-              </strong>
-              Individual Suites
-            </div>
-            <div>
-              <strong style={{ display: 'block', fontSize: '1.3rem', color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', fontWeight: '400' }}>
-                4
-              </strong>
-              Refined Configurations
-            </div>
-            <div>
-              <strong style={{ display: 'block', fontSize: '1.3rem', color: 'var(--text-primary)', fontFamily: 'var(--font-serif)', fontWeight: '400' }}>
-                100%
-              </strong>
-              Automated Operations
-            </div>
-          </div>
         </div>
 
         {/* Photography Container with Micro-interaction Scale */}
@@ -156,7 +127,7 @@ export default function SuiteShowcase({ onSelectSuite, tariffs = [] }) {
 
               <button
                 className="btn-editorial-secondary"
-                style={{ padding: '6px 12px', fontSize: '0.65rem' }}
+                style={{ padding: '6px 14px', fontSize: '0.65rem' }}
                 onClick={() => onSelectSuite(suite.bedType, suite.acType)}
               >
                 Select

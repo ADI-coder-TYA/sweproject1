@@ -2,26 +2,30 @@ import React, { useState, useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import SuiteShowcase from './components/SuiteShowcase';
-import ReceptionistPortal from './components/ReceptionistPortal';
-import CateringPortal from './components/CateringPortal';
-import ManagerPortal from './components/ManagerPortal';
-import BillsLedger from './components/BillsLedger';
+import StaffRoleModal from './components/StaffRoleModal';
+import GuestBookingModal from './components/GuestBookingModal';
+import StaffOperationsView from './components/StaffOperationsView';
 import ApologyModal from './components/ApologyModal';
 
 export default function App() {
+  // Top-level view mode: 'guest' (public luxury site) or 'staff' (hotel operations terminal)
+  const [viewMode, setViewMode] = useState('guest');
   const [activeTab, setActiveTab] = useState('receptionist');
   const [hotelData, setHotelData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Cross-component pre-fill & apology modal state
-  const [preFillData, setPreFillData] = useState(null);
+  // Modal states
+  const [showStaffModal, setShowStaffModal] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [bookingCriteria, setBookingCriteria] = useState(null);
   const [heroApologyData, setHeroApologyData] = useState(null);
   const [showHeroApology, setShowHeroApology] = useState(false);
+
+  // Cross-portal state
   const [activeCateringToken, setActiveCateringToken] = useState('');
   const [inquiryEmail, setInquiryEmail] = useState('');
 
   const heroRef = useRef(null);
-  const portalRef = useRef(null);
 
   // Fetch hotel overview
   const fetchHotelData = async () => {
@@ -42,62 +46,86 @@ export default function App() {
     fetchHotelData();
   }, []);
 
-  const scrollToWorkstation = () => {
-    if (portalRef.current) {
-      portalRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
+  // Open the guest booking modal with search criteria
   const handleProceedToBooking = (criteria) => {
-    setPreFillData(criteria);
-    setActiveTab('receptionist');
-    setTimeout(() => {
-      if (portalRef.current) {
-        portalRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 60);
+    setBookingCriteria(criteria);
+    setShowBookingModal(true);
   };
 
-  const handleNavigateToCatering = (tokenNum) => {
-    setActiveCateringToken(tokenNum);
-    setActiveTab('catering');
-    setTimeout(() => {
-      if (portalRef.current) {
-        portalRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 60);
+  // Open booking modal when selecting a suite from the showcase
+  const handleSelectSuite = (bed, ac) => {
+    setBookingCriteria({ bedType: bed, acType: ac, durationOfStay: 2 });
+    setShowBookingModal(true);
   };
 
+  // Open booking modal with default values from navbar "Reserve Suite"
+  const handleOpenReserveDirectly = () => {
+    setBookingCriteria({ bedType: 'Double', acType: 'AC', durationOfStay: 2 });
+    setShowBookingModal(true);
+  };
+
+  // Handle apology modal trigger
   const handleShowApology = (data) => {
     setHeroApologyData(data);
     setShowHeroApology(true);
   };
 
-  const handleSelectSuite = (bed, ac) => {
-    handleProceedToBooking({ bedType: bed, acType: ac });
+  // Switch to Staff Operations View at a specific terminal
+  const handleSelectTerminal = (terminalId) => {
+    setActiveTab(terminalId);
+    setViewMode('staff');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Cross-terminal handoff to catering
+  const handleNavigateToCatering = (tokenNum) => {
+    setActiveCateringToken(tokenNum);
+    setActiveTab('catering');
+    setViewMode('staff');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Return to public guest view
+  const handleReturnToGuestView = () => {
+    setViewMode('guest');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // If viewing the internal staff operations terminal
+  if (viewMode === 'staff') {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <StaffOperationsView
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          hotelData={hotelData}
+          onDataChange={fetchHotelData}
+          onReturnToGuestView={handleReturnToGuestView}
+          activeCateringToken={activeCateringToken}
+          onNavigateToCatering={handleNavigateToCatering}
+          preFillData={bookingCriteria}
+        />
+      </div>
+    );
+  }
+
+  // Public Guest Sanctuary View
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-main)' }}>
-      {/* Top Editorial Navbar */}
-      <Navbar 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        hotelData={hotelData} 
-        onBookClick={() => {
-          setActiveTab('receptionist');
-          scrollToWorkstation();
-        }}
+      {/* Top Editorial Minimalist Navbar */}
+      <Navbar
+        onStaffClick={() => setShowStaffModal(true)}
+        onBookClick={handleOpenReserveDirectly}
       />
 
-      {/* Cinematic Hero Container with Integrated Interactive Availability Bar */}
-      <HeroSection 
+      {/* Cinematic Hero Container with Integrated Availability Search Bar */}
+      <HeroSection
         heroRef={heroRef}
         onProceedToBooking={handleProceedToBooking}
         onShowApology={handleShowApology}
       />
 
-      {/* Main Container */}
+      {/* Main Luxury Suite Showcase Container */}
       <main style={{ flex: 1, maxWidth: '1440px', width: '100%', margin: '0 auto', padding: '0 32px 64px 32px' }}>
         {loading ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-secondary)' }}>
@@ -105,55 +133,37 @@ export default function App() {
             <div className="font-serif" style={{ fontSize: '1.6rem' }}>The Grand Horizon Collection</div>
           </div>
         ) : (
-          <>
-            {/* Architectural Suite Showcase */}
-            <SuiteShowcase 
-              onSelectSuite={handleSelectSuite} 
-              tariffs={hotelData?.tariffs || []} 
-            />
-
-            {/* Operational Workstation Section */}
-            <div ref={portalRef} style={{ paddingTop: '32px' }}>
-              {activeTab === 'receptionist' && (
-                <ReceptionistPortal 
-                  hotelData={hotelData} 
-                  onDataChange={fetchHotelData} 
-                  preFillData={preFillData}
-                  onNavigateToCatering={handleNavigateToCatering}
-                />
-              )}
-
-              {activeTab === 'catering' && (
-                <CateringPortal 
-                  hotelData={hotelData} 
-                  onDataChange={fetchHotelData} 
-                  selectedTokenProp={activeCateringToken}
-                />
-              )}
-
-              {activeTab === 'manager' && (
-                <ManagerPortal 
-                  hotelData={hotelData} 
-                  onDataChange={fetchHotelData} 
-                />
-              )}
-
-              {activeTab === 'invoices' && (
-                <BillsLedger />
-              )}
-            </div>
-          </>
+          <SuiteShowcase
+            onSelectSuite={handleSelectSuite}
+            tariffs={hotelData?.tariffs || []}
+          />
         )}
       </main>
 
-      {/* Global Apology Modal for Hero Bar search */}
+      {/* Role Selection Modal for Authorized Hotel Staff */}
+      <StaffRoleModal
+        isOpen={showStaffModal}
+        onClose={() => setShowStaffModal(false)}
+        onSelectTerminal={handleSelectTerminal}
+      />
+
+      {/* Refined Guest Reservation Modal */}
+      <GuestBookingModal
+        isOpen={showBookingModal}
+        onClose={() => setShowBookingModal(false)}
+        initialData={bookingCriteria}
+        onBookingComplete={fetchHotelData}
+      />
+
+      {/* Global Apology Modal for Full Occupancy */}
       <ApologyModal
         isOpen={showHeroApology}
         onClose={() => setShowHeroApology(false)}
         apologyData={heroApologyData}
         onSelectCategory={(bed, ac) => {
-          handleProceedToBooking({ bedType: bed, acType: ac });
+          setBookingCriteria({ bedType: bed, acType: ac, durationOfStay: 2 });
           setShowHeroApology(false);
+          setShowBookingModal(true);
         }}
       />
 
@@ -181,27 +191,27 @@ export default function App() {
             <h3 className="font-serif" style={{ fontSize: '1.8rem', fontWeight: '300', color: '#FFFFFF', marginBottom: '14px' }}>
               THE GRAND HORIZON
             </h3>
-            <p style={{ color: '#A8A29E', fontSize: '0.85rem', lineHeight: '1.8', maxWidth: '320px' }}>
-              A sanctuary of peace, travertine architecture, and quiet luxury. 24 private suites, automated allocation, and bespoke in-room dining.
+            <p style={{ color: '#A8A29E', fontSize: '0.85rem', lineHeight: '1.8', maxWidth: '340px' }}>
+              A sanctuary of peace, travertine architecture, and quiet luxury. Offering tailored suites, bespoke in-room culinary journeys, and uncompromised hospitality.
             </p>
           </div>
 
           <div>
             <span className="eyebrow" style={{ color: '#A8A29E', marginBottom: '14px' }}>
-              Operational Terminals
+              Hospitality Services
             </span>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.82rem', color: '#D6D3D1' }}>
-              <li style={{ cursor: 'pointer' }} onClick={() => { setActiveTab('receptionist'); scrollToWorkstation(); }}>
-                01. Allotment & Front Desk Terminal
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.82rem', color: '#D6D3D1', padding: 0 }}>
+              <li style={{ cursor: 'pointer' }} onClick={handleOpenReserveDirectly}>
+                Private Suite Accommodations
               </li>
-              <li style={{ cursor: 'pointer' }} onClick={() => { setActiveTab('catering'); scrollToWorkstation(); }}>
-                02. In-Room Dining & Catering Logger
+              <li style={{ cursor: 'pointer' }} onClick={handleOpenReserveDirectly}>
+                Advance Sanctuary Reservations
               </li>
-              <li style={{ cursor: 'pointer' }} onClick={() => { setActiveTab('manager'); scrollToWorkstation(); }}>
-                03. Dynamic Occupancy & Tariff Control
+              <li style={{ cursor: 'pointer' }} onClick={() => setShowStaffModal(true)}>
+                Concierge & In-Room Dining Service
               </li>
-              <li style={{ cursor: 'pointer' }} onClick={() => { setActiveTab('invoices'); scrollToWorkstation(); }}>
-                04. Settled Folios & Frequent Guest Directory
+              <li style={{ cursor: 'pointer', color: 'var(--accent-gold)' }} onClick={() => setShowStaffModal(true)}>
+                Staff & Operations Terminal Login →
               </li>
             </ul>
           </div>
@@ -272,7 +282,7 @@ export default function App() {
             The Grand Horizon Hotel Automation • Academic Software Engineering System
           </div>
           <div>
-            Fully strictly aligned with UML Sequence Diagrams 1–3, Statechart, Use Case & Class Diagrams.
+            Strictly conforming to UML Sequence Diagrams 1–3, Statechart, Use Case & Class Diagrams.
           </div>
         </div>
       </footer>
