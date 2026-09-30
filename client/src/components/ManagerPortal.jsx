@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { LineChart, Percent, TrendingUp, TrendingDown, DollarSign, Calendar, RefreshCw, CheckCircle2, BedDouble } from 'lucide-react';
 
 export default function ManagerPortal({ hotelData, onDataChange }) {
   const currentMonthNum = new Date().getMonth() + 1;
@@ -18,7 +17,6 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
   const [revising, setRevising] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Months labels
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -43,7 +41,7 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
     fetchOccupancy(selectedMonth, selectedYear);
   }, [selectedMonth, selectedYear]);
 
-  // Execute Tariff Revision by Percentage
+  // Execute Tariff Revision
   const handleReviseTariff = async (e) => {
     e.preventDefault();
     setRevising(true);
@@ -78,44 +76,46 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
   const tariffs = hotelData?.tariffs || [];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-      {/* Header */}
-      <div>
-        <h2 className="font-serif gold-gradient-text" style={{ fontSize: '1.7rem' }}>
-          Executive Manager Control & Tariff Strategy
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
+      
+      {/* Editorial Header */}
+      <div style={{ borderBottom: '1px solid var(--border-hairline)', paddingBottom: '24px' }}>
+        <span className="eyebrow" style={{ marginBottom: '8px' }}>
+          Executive Suite Strategy • Sequence Diagram 2 & Activity Diagram
+        </span>
+        <h2 className="font-serif" style={{ fontSize: '2.4rem', fontWeight: '300' }}>
+          Occupancy Intelligence & Dynamic Tariff Control
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-          Sequence Diagram 2 & Activity Diagram — Analyze monthly average occupancy rates and dynamically calibrate room tariffs upward or downward by percentage.
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', maxWidth: '680px', marginTop: '6px' }}>
+          Monitor monthly average occupancy trends and calibrate baseline room tariffs upward or downward by exact percentages to maximize revenue efficiency.
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px, 1fr))', gap: '32px' }}>
         
         {/* MONTHLY OCCUPANCY ANALYTICS CARD */}
-        <div className="glass-panel" style={{ padding: '28px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <LineChart size={22} color="var(--gold-light)" />
-              <h3 className="font-serif" style={{ fontSize: '1.25rem' }}>
-                Monthly Occupancy Analysis
-              </h3>
+        <div className="editorial-card" style={{ padding: '36px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid var(--border-hairline)', paddingBottom: '16px' }}>
+            <div>
+              <span className="eyebrow">Occupancy Audit</span>
+              <h3 className="font-serif" style={{ fontSize: '1.4rem' }}>Monthly Occupancy Rate</h3>
             </div>
             <button
-              className="btn-secondary"
-              style={{ padding: '4px 10px', fontSize: '0.8rem' }}
+              className="btn-editorial-secondary"
+              style={{ padding: '6px 12px', fontSize: '0.65rem' }}
               onClick={() => fetchOccupancy(selectedMonth, selectedYear)}
             >
-              <RefreshCw size={14} /> Refresh
+              Recalculate
             </button>
           </div>
 
-          {/* Month / Year Controls */}
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '14px', marginBottom: '24px' }}>
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">Analysis Month</label>
+          {/* Month / Year Pickers */}
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px', marginBottom: '24px' }}>
+            <div className="form-group-editorial" style={{ margin: 0 }}>
+              <label className="form-label-editorial">Select Month</label>
               <select
                 id="select-occupancy-month"
-                className="form-select"
+                className="editorial-select"
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(Number(e.target.value))}
               >
@@ -127,83 +127,78 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
               </select>
             </div>
 
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">Year</label>
+            <div className="form-group-editorial" style={{ margin: 0 }}>
+              <label className="form-label-editorial">Select Year</label>
               <input
                 id="input-occupancy-year"
                 type="number"
-                className="form-input"
+                className="editorial-input"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(Number(e.target.value))}
               />
             </div>
           </div>
 
-          {/* Large Gauge / Metric Box */}
+          {/* Clean Metric Box */}
           {occupancyData ? (
             <div style={{
-              background: 'linear-gradient(135deg, rgba(14, 26, 53, 0.8) 0%, rgba(9, 15, 30, 0.9) 100%)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-md)',
-              padding: '24px',
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border-hairline)',
+              padding: '28px',
               textAlign: 'center',
-              marginBottom: '20px'
+              marginBottom: '24px'
             }}>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                Average Occupancy Rate — {monthNames[selectedMonth - 1]} {selectedYear}
-              </div>
+              <span className="eyebrow" style={{ fontSize: '0.65rem', marginBottom: '6px' }}>
+                Average Monthly Occupancy • {monthNames[selectedMonth - 1]} {selectedYear}
+              </span>
 
-              <div className="gold-gradient-text" style={{ fontSize: '3.2rem', fontWeight: '800', margin: '8px 0', fontFamily: 'var(--font-serif)' }}>
+              <div className="font-serif" style={{ fontSize: '3.6rem', fontWeight: '300', margin: '4px 0', color: 'var(--text-primary)' }}>
                 {occupancyData.occupancyRate}%
               </div>
 
-              {/* Progress bar visual */}
-              <div style={{ height: '10px', background: 'rgba(255,255,255,0.08)', borderRadius: '5px', overflow: 'hidden', margin: '14px 0' }}>
+              {/* Minimalist Progress Line */}
+              <div style={{ height: '3px', background: 'var(--border-hairline)', margin: '18px 0', position: 'relative' }}>
                 <div style={{
                   height: '100%',
                   width: `${Math.min(100, occupancyData.occupancyRate)}%`,
-                  background: 'linear-gradient(90deg, #c5a059 0%, #34d399 100%)',
-                  borderRadius: '5px',
-                  transition: 'width 0.5s ease-out'
+                  background: 'var(--text-primary)',
+                  transition: 'width 0.6s ease'
                 }} />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '16px', fontSize: '0.9rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-secondary)' }}>
                 <div>
-                  <span style={{ color: 'var(--text-muted)' }}>Occupied: </span>
-                  <strong style={{ color: '#fb7185' }}>{occupancyData.occupiedRooms} Rooms</strong>
+                  Occupied: <strong style={{ color: 'var(--text-primary)' }}>{occupancyData.occupiedRooms} Suites</strong>
                 </div>
                 <div>
-                  <span style={{ color: 'var(--text-muted)' }}>Inventory: </span>
-                  <strong>{occupancyData.totalRooms} Rooms</strong>
+                  Capacity: <strong style={{ color: 'var(--text-primary)' }}>{occupancyData.totalRooms} Suites</strong>
                 </div>
                 <div>
-                  <span style={{ color: 'var(--text-muted)' }}>Status: </span>
-                  <strong style={{ color: occupancyData.occupancyRate >= 75 ? '#34d399' : 'var(--gold-light)' }}>
-                    {occupancyData.occupancyRate >= 80 ? 'Peak Season' : occupancyData.occupancyRate >= 60 ? 'Standard' : 'Off-Peak'}
+                  Season: <strong style={{ color: 'var(--text-primary)' }}>
+                    {occupancyData.occupancyRate >= 80 ? 'Peak' : occupancyData.occupancyRate >= 60 ? 'Standard' : 'Off-Peak'}
                   </strong>
                 </div>
               </div>
             </div>
           ) : (
-            <div style={{ color: 'var(--text-muted)', padding: '20px 0' }}>Loading monthly metrics...</div>
+            <div style={{ color: 'var(--text-muted)', padding: '24px 0' }}>Calculating monthly occupancy...</div>
           )}
 
-          {/* Historical Trends Micro-Chart */}
-          <div style={{ marginTop: '10px' }}>
-            <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.05em', marginBottom: '10px' }}>
+          {/* Historical Bars */}
+          <div>
+            <span className="eyebrow" style={{ fontSize: '0.62rem', marginBottom: '12px' }}>
               Historical Monthly Occupancy Records
-            </div>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '6px', height: '100px', padding: '10px 0' }}>
+            </span>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '8px', height: '110px', paddingTop: '10px' }}>
               {history.map((h, i) => (
-                <div 
-                  key={i} 
-                  style={{ 
-                    flex: 1, 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    alignItems: 'center', 
-                    height: '100%', 
+                <div
+                  key={i}
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    height: '100%',
                     justifyContent: 'flex-end',
                     cursor: 'pointer'
                   }}
@@ -216,11 +211,10 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
                   <div style={{
                     width: '100%',
                     height: `${h.occupancyRate}%`,
-                    background: selectedMonth === h.month ? 'var(--gold-primary)' : 'rgba(197, 160, 89, 0.3)',
-                    borderRadius: '3px 3px 0 0',
-                    transition: 'var(--transition)'
+                    background: selectedMonth === h.month ? 'var(--text-primary)' : 'var(--border-subtle)',
+                    transition: 'var(--transition-quiet)'
                   }} />
-                  <span style={{ fontSize: '0.65rem', color: selectedMonth === h.month ? 'var(--gold-light)' : 'var(--text-muted)', marginTop: '4px' }}>
+                  <span style={{ fontSize: '0.62rem', color: selectedMonth === h.month ? 'var(--text-primary)' : 'var(--text-muted)', marginTop: '6px' }}>
                     {monthNames[h.month - 1]?.substring(0, 3)}
                   </span>
                 </div>
@@ -230,29 +224,27 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
         </div>
 
         {/* DYNAMIC PERCENTAGE TARIFF REVISION CARD */}
-        <div className="glass-panel" style={{ padding: '28px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-            <Percent size={22} color="var(--gold-light)" />
-            <h3 className="font-serif" style={{ fontSize: '1.25rem' }}>
-              Dynamic Room Tariff Revision
-            </h3>
+        <div className="editorial-card" style={{ padding: '36px' }}>
+          <div style={{ marginBottom: '24px', borderBottom: '1px solid var(--border-hairline)', paddingBottom: '16px' }}>
+            <span className="eyebrow">Tariff Calibration</span>
+            <h3 className="font-serif" style={{ fontSize: '1.4rem' }}>Dynamic Rate Revision Engine</h3>
           </div>
 
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '20px' }}>
-            Revise baseline room tariffs upward during high occupancy surges or downward to stimulate booking demand during off-peak periods.
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '20px' }}>
+            Revise suite tariffs upward to capitalize on peak seasonal occupancy, or downward to stimulate bookings during off-peak periods.
           </p>
 
           <form onSubmit={handleReviseTariff}>
-            {/* Target Category Selection */}
-            <div className="form-group">
-              <label className="form-label">Target Room Tariff Category</label>
+            {/* Category Selector */}
+            <div className="form-group-editorial">
+              <label className="form-label-editorial">Target Suite Category</label>
               <select
                 id="select-tariff-target"
-                className="form-select"
+                className="editorial-select"
                 value={targetTariffId}
                 onChange={(e) => setTargetTariffId(e.target.value)}
               >
-                <option value="ALL">Apply Revision to All Room Categories</option>
+                <option value="ALL">Apply Revision Across All 4 Suite Categories</option>
                 {tariffs.map((t) => (
                   <option key={t.tariffId} value={t.tariffId}>
                     {t.bedType} Bed Suite ({t.acType}) — Current: ${t.rate.toFixed(2)}/night
@@ -261,83 +253,66 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
               </select>
             </div>
 
-            {/* Percentage Input & Quick Buttons */}
-            <div className="form-group">
-              <label className="form-label">Percentage Adjustment (%)</label>
+            {/* Percentage Input */}
+            <div className="form-group-editorial">
+              <label className="form-label-editorial">Adjustment Percentage (%)</label>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <input
                   id="input-tariff-percentage"
                   type="number"
                   step="0.5"
-                  className="form-input"
+                  className="editorial-input"
                   placeholder="+10 or -15"
                   value={percentage}
                   onChange={(e) => setPercentage(parseFloat(e.target.value) || 0)}
                   required
                 />
-                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--gold-light)' }}>%</span>
+                <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>%</span>
               </div>
 
-              {/* Quick Presets */}
-              <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  style={{ padding: '3px 8px', fontSize: '0.75rem' }}
-                  onClick={() => setPercentage(15)}
-                >
-                  <TrendingUp size={12} color="#34d399" /> +15% Peak
-                </button>
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  style={{ padding: '3px 8px', fontSize: '0.75rem' }}
-                  onClick={() => setPercentage(10)}
-                >
-                  <TrendingUp size={12} color="#34d399" /> +10% High
-                </button>
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  style={{ padding: '3px 8px', fontSize: '0.75rem' }}
-                  onClick={() => setPercentage(-5)}
-                >
-                  <TrendingDown size={12} color="#fb7185" /> -5% Discount
-                </button>
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  style={{ padding: '3px 8px', fontSize: '0.75rem' }}
-                  onClick={() => setPercentage(-15)}
-                >
-                  <TrendingDown size={12} color="#fb7185" /> -15% Low Season
-                </button>
+              {/* Minimal Presets */}
+              <div style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
+                {[
+                  { label: '+15% Peak', val: 15 },
+                  { label: '+10% High', val: 10 },
+                  { label: '-5% Shoulder', val: -5 },
+                  { label: '-15% Off-Peak', val: -15 },
+                ].map(preset => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    className="btn-editorial-secondary"
+                    style={{ padding: '4px 10px', fontSize: '0.65rem' }}
+                    onClick={() => setPercentage(preset.val)}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Impact Calculation Preview */}
+            {/* Projected Impact Preview */}
             <div style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-sm)',
-              padding: '14px',
-              marginBottom: '18px'
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border-hairline)',
+              padding: '16px 20px',
+              marginBottom: '20px'
             }}>
-              <div style={{ fontSize: '0.78rem', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '8px' }}>
-                Projected Tariff Adjustments ({percentage > 0 ? `+${percentage}%` : `${percentage}%`})
-              </div>
+              <span className="eyebrow" style={{ fontSize: '0.62rem', marginBottom: '8px' }}>
+                Projected Rate Schedule ({percentage > 0 ? `+${percentage}%` : `${percentage}%`})
+              </span>
 
-              <div style={{ display: 'grid', gap: '6px', fontSize: '0.85rem' }}>
+              <div style={{ display: 'grid', gap: '6px', fontSize: '0.82rem' }}>
                 {tariffs
                   .filter(t => targetTariffId === 'ALL' || t.tariffId === targetTariffId)
                   .map(t => {
                     const newRate = Number((t.rate * (1 + percentage / 100)).toFixed(2));
                     return (
                       <div key={t.tariffId} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: 'var(--text-muted)' }}>{t.bedType} Bed ({t.acType}):</span>
+                        <span style={{ color: 'var(--text-secondary)' }}>{t.bedType} Bed ({t.acType}):</span>
                         <span>
-                          <s style={{ color: '#94a3b8', marginRight: '6px' }}>${t.rate.toFixed(2)}</s>
-                          <strong style={{ color: percentage > 0 ? '#34d399' : '#fb7185' }}>
+                          <s style={{ color: 'var(--text-muted)', marginRight: '8px' }}>${t.rate.toFixed(2)}</s>
+                          <strong style={{ color: 'var(--text-primary)' }}>
                             ${newRate.toFixed(2)}
                           </strong>
                         </span>
@@ -348,7 +323,7 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
             </div>
 
             {errorMsg && (
-              <div style={{ color: '#fb7185', fontSize: '0.85rem', marginBottom: '14px' }}>
+              <div style={{ color: 'var(--accent-clay)', fontSize: '0.82rem', marginBottom: '16px' }}>
                 {errorMsg}
               </div>
             )}
@@ -356,69 +331,64 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
             <button
               id="btn-apply-tariff-revision"
               type="submit"
-              className="btn-gold"
-              style={{ width: '100%', padding: '12px' }}
+              className="btn-editorial-primary"
+              style={{ width: '100%', padding: '14px' }}
               disabled={revising || percentage === 0}
             >
-              {revising ? 'Updating Rates...' : `Execute ${percentage > 0 ? `+${percentage}%` : `${percentage}%`} Tariff Revision`}
+              {revising ? 'Updating Rates...' : `Execute ${percentage > 0 ? `+${percentage}%` : `${percentage}%`} Tariff Calibration`}
             </button>
           </form>
 
-          {/* Success Banner */}
           {revisionResult && (
             <div style={{
               marginTop: '16px',
               padding: '12px 16px',
-              background: 'rgba(16, 185, 129, 0.1)',
-              border: '1px solid #10b981',
-              borderRadius: 'var(--radius-sm)',
-              color: '#34d399',
-              fontSize: '0.88rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px'
+              background: 'var(--accent-pine-bg)',
+              border: '1px solid #D6E4DB',
+              color: 'var(--accent-pine)',
+              fontSize: '0.82rem'
             }}>
-              <CheckCircle2 size={18} />
-              <span>{revisionResult.message}</span>
+              ✓ {revisionResult.message}
             </div>
           )}
         </div>
       </div>
 
-      {/* CURRENT ACTIVE TARIFF MASTER TABLE */}
-      <div className="glass-panel" style={{ padding: '28px' }}>
-        <h3 className="font-serif gold-gradient-text" style={{ fontSize: '1.3rem', marginBottom: '16px' }}>
-          Official 5-Star Tariff Schedule & Inventory Allotment
-        </h3>
+      {/* ACTIVE TARIFF SCHEDULE */}
+      <div className="editorial-card" style={{ padding: '36px' }}>
+        <div style={{ marginBottom: '24px', borderBottom: '1px solid var(--border-hairline)', paddingBottom: '16px' }}>
+          <span className="eyebrow">Rate Master</span>
+          <h3 className="font-serif" style={{ fontSize: '1.6rem' }}>Official 5-Star Tariff Schedule</h3>
+        </div>
 
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border-subtle)', textAlign: 'left', color: 'var(--gold-light)' }}>
-                <th style={{ padding: '10px' }}>Category Code</th>
-                <th style={{ padding: '10px' }}>Bed Type</th>
-                <th style={{ padding: '10px' }}>Climate Control</th>
-                <th style={{ padding: '10px', textAlign: 'right' }}>Active Tariff / Night</th>
-                <th style={{ padding: '10px', textAlign: 'center' }}>Total Rooms</th>
+              <tr style={{ borderBottom: '1px solid var(--border-hairline)', textAlign: 'left', color: 'var(--text-secondary)' }}>
+                <th style={{ padding: '12px 10px' }}>Category Code</th>
+                <th style={{ padding: '12px 10px' }}>Bed Type</th>
+                <th style={{ padding: '12px 10px' }}>Climate Control</th>
+                <th style={{ padding: '12px 10px', textAlign: 'right' }}>Active Tariff / Night</th>
+                <th style={{ padding: '12px 10px', textAlign: 'center' }}>Room Allotment</th>
               </tr>
             </thead>
             <tbody>
               {tariffs.map((t) => (
-                <tr key={t.tariffId} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td style={{ padding: '12px 10px', fontFamily: 'monospace', color: 'var(--accent-blue)' }}>
+                <tr key={t.tariffId} style={{ borderBottom: '1px solid var(--border-hairline)' }}>
+                  <td style={{ padding: '14px 10px', color: 'var(--text-muted)', fontSize: '0.8rem', letterSpacing: '0.05em' }}>
                     {t.tariffId}
                   </td>
-                  <td style={{ padding: '12px 10px', fontWeight: '500' }}>
+                  <td style={{ padding: '14px 10px', fontWeight: '500' }}>
                     {t.bedType} Bed Suite
                   </td>
-                  <td style={{ padding: '12px 10px' }}>
+                  <td style={{ padding: '14px 10px' }}>
                     {t.acType}
                   </td>
-                  <td style={{ padding: '12px 10px', textAlign: 'right', fontWeight: '700', color: 'var(--text-gold)', fontSize: '1.05rem' }}>
+                  <td style={{ padding: '14px 10px', textAlign: 'right', fontWeight: '500', fontSize: '1.05rem' }}>
                     ${t.rate.toFixed(2)}
                   </td>
-                  <td style={{ padding: '12px 10px', textAlign: 'center' }}>
-                    6 Rooms
+                  <td style={{ padding: '14px 10px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                    6 Suites
                   </td>
                 </tr>
               ))}

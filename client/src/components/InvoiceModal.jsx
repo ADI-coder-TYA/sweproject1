@@ -1,5 +1,4 @@
 import React from 'react';
-import { Printer, CheckCircle2, X, Award, Utensils, BedDouble, Calendar } from 'lucide-react';
 
 export default function InvoiceModal({ isOpen, onClose, billData }) {
   if (!isOpen || !billData) return null;
@@ -30,178 +29,179 @@ export default function InvoiceModal({ isOpen, onClose, billData }) {
       <div 
         className="modal-content" 
         onClick={(e) => e.stopPropagation()} 
-        style={{ maxWidth: '780px', border: '1px solid var(--gold-primary)' }}
+        style={{ maxWidth: '800px', padding: '0', background: '#FFFFFF' }}
       >
-        {/* Modal Controls (Hidden in Print) */}
+        {/* Controls Bar (Hidden in Print) */}
         <div className="no-print" style={{
-          padding: '16px 24px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          padding: '16px 32px',
+          borderBottom: '1px solid var(--border-hairline)',
+          background: 'var(--bg-surface)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          background: 'rgba(255, 255, 255, 0.02)'
+          justifyContent: 'space-between'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span className="badge badge-available">
-              <CheckCircle2 size={13} /> Checkout Finalized
+          <div>
+            <span className="eyebrow" style={{ color: 'var(--accent-pine)', marginBottom: '2px' }}>
+              Folio Settled & Room Released
             </span>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Bill #{billNumber}
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              Folio Ref: #{billNumber}
             </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <button 
               id="btn-print-bill"
               onClick={handlePrint} 
-              className="btn-gold" 
-              style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+              className="btn-editorial-primary" 
+              style={{ padding: '8px 20px', fontSize: '0.68rem' }}
             >
-              <Printer size={15} /> Print / Save Invoice
+              Print Folio
             </button>
             <button 
               onClick={onClose} 
-              className="btn-secondary" 
-              style={{ padding: '6px', borderRadius: '50%', border: 'none' }}
+              className="btn-editorial-secondary" 
+              style={{ padding: '8px 16px', fontSize: '0.68rem' }}
             >
-              <X size={18} />
+              Close
             </button>
           </div>
         </div>
 
-        {/* Printable Folio / Invoice Section */}
-        <div id="printable-invoice" className="print-invoice" style={{ padding: '36px', background: '#09101f' }}>
-          {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid var(--gold-primary)', paddingBottom: '20px', marginBottom: '24px' }}>
+        {/* Printable Folio Document */}
+        <div style={{ padding: '48px 48px' }}>
+          {/* Folio Header */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            borderBottom: '1px solid var(--border-hairline)',
+            paddingBottom: '24px',
+            marginBottom: '32px'
+          }}>
             <div>
-              <h1 className="font-serif gold-gradient-text" style={{ fontSize: '1.8rem', marginBottom: '4px' }}>
-                The Grand Horizon
+              <span className="eyebrow" style={{ letterSpacing: '0.35em', marginBottom: '6px' }}>
+                Official Guest Folio
+              </span>
+              <h1 className="font-serif" style={{ fontSize: '2.2rem', fontWeight: '400', letterSpacing: '0.04em' }}>
+                THE GRAND HORIZON
               </h1>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
-                5-STAR LUXURY HOTEL & PRIVATE SUITES
-              </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                100 Royal Crest Boulevard, Central Oasis • reservations@grandhorizon.com
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                100 Royal Crest Promenade • reservations@grandhorizon.com
               </div>
             </div>
 
             <div style={{ textAlign: 'right' }}>
-              <div className="font-serif" style={{ fontSize: '1.3rem', color: 'var(--gold-light)' }}>
-                OFFICIAL GUEST FOLIO
+              <div className="font-serif" style={{ fontSize: '1.4rem', fontWeight: '400' }}>
+                FOLIO #{billNumber}
               </div>
-              <div style={{ fontSize: '0.9rem', fontWeight: '600', marginTop: '4px' }}>
-                Bill No: <span style={{ color: 'var(--text-main)' }}>{billNumber}</span>
-              </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                Date: {generatedAt}
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                Settlement Date: {generatedAt}
               </div>
             </div>
           </div>
 
-          {/* Guest & Stay Metadata Grid */}
+          {/* Guest Stay Metadata */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '16px',
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(197, 160, 89, 0.2)',
-            borderRadius: 'var(--radius-sm)',
-            padding: '16px',
-            marginBottom: '24px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '20px',
+            border: '1px solid var(--border-hairline)',
+            padding: '20px 24px',
+            background: 'var(--bg-surface-light)',
+            marginBottom: '32px'
           }}>
             <div>
-              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Guest Name</div>
-              <div style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--text-main)', marginTop: '2px' }}>
+              <span className="eyebrow" style={{ fontSize: '0.6rem' }}>Guest Name</span>
+              <div style={{ fontSize: '1.05rem', fontFamily: 'var(--font-serif)', color: 'var(--text-primary)', marginTop: '2px' }}>
                 {guest.name}
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{guest.phone}</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{guest.phone}</div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Room Number & Type</div>
-              <div style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--text-gold)', marginTop: '2px' }}>
-                Room {room.roomNumber} ({room.bedType} Bed, {room.acType})
+              <span className="eyebrow" style={{ fontSize: '0.6rem' }}>Suite Allotment</span>
+              <div style={{ fontSize: '1.05rem', fontFamily: 'var(--font-serif)', color: 'var(--text-primary)', marginTop: '2px' }}>
+                Suite {room.roomNumber} ({room.bedType} Bed, {room.acType})
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                 Rate: ${room.rate?.toFixed(2)}/night
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Token & Duration</div>
-              <div style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--accent-blue)', marginTop: '2px' }}>
+              <span className="eyebrow" style={{ fontSize: '0.6rem' }}>Stay Token & Length</span>
+              <div style={{ fontSize: '0.95rem', fontWeight: '500', color: 'var(--text-primary)', marginTop: '2px' }}>
                 {token.tokenNumber || 'TKN-0000'}
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                 Stay: {duration} Night{duration > 1 ? 's' : ''}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Guest Category</div>
+              <span className="eyebrow" style={{ fontSize: '0.6rem' }}>Guest Status</span>
               {frequentGuest || guest.frequentGuestId ? (
                 <div style={{ marginTop: '2px' }}>
-                  <span className="badge badge-vip">
-                    <Award size={12} /> VIP Frequent Guest
+                  <span className="badge-editorial badge-vip">
+                    VIP Frequent Guest
                   </span>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-gold)', marginTop: '4px' }}>
-                    ID: {guest.frequentGuestId} ({frequentGuest?.discountPercentage || 15}% Discount)
+                  <div style={{ fontSize: '0.72rem', color: 'var(--accent-gold)', marginTop: '4px' }}>
+                    ID: {guest.frequentGuestId} ({frequentGuest?.discountPercentage || 15}% Benefit)
                   </div>
                 </div>
               ) : (
-                <div style={{ fontSize: '0.9rem', color: 'var(--text-main)', marginTop: '4px' }}>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                   Standard Guest
                 </div>
               )}
             </div>
           </div>
 
-          {/* Charges Itemization Table */}
-          <div style={{ marginBottom: '24px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+          {/* Itemized Charges Table */}
+          <div style={{ marginBottom: '32px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid var(--border-subtle)', textAlign: 'left', color: 'var(--gold-light)' }}>
-                  <th style={{ padding: '10px 8px' }}>Description</th>
-                  <th style={{ padding: '10px 8px', textAlign: 'center' }}>Qty / Nights</th>
-                  <th style={{ padding: '10px 8px', textAlign: 'right' }}>Unit Rate</th>
-                  <th style={{ padding: '10px 8px', textAlign: 'right' }}>Total Amount</th>
+                <tr style={{ borderBottom: '1px solid var(--border-hairline)', textAlign: 'left', color: 'var(--text-secondary)' }}>
+                  <th style={{ padding: '10px 8px', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '0.7rem' }}>Description</th>
+                  <th style={{ padding: '10px 8px', textAlign: 'center', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '0.7rem' }}>Nights / Qty</th>
+                  <th style={{ padding: '10px 8px', textAlign: 'right', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '0.7rem' }}>Rate</th>
+                  <th style={{ padding: '10px 8px', textAlign: 'right', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '0.7rem' }}>Total</th>
                 </tr>
               </thead>
               <tbody>
-                {/* Room Tariff Row */}
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td style={{ padding: '12px 8px' }}>
-                    <div style={{ fontWeight: '500' }}>Room Accommodation Charges</div>
-                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                      {room.bedType} Bed Suite ({room.acType}) — Room {room.roomNumber}
+                <tr style={{ borderBottom: '1px solid var(--border-hairline)' }}>
+                  <td style={{ padding: '14px 8px' }}>
+                    <div style={{ fontWeight: '500' }}>Suite Accommodation Charges</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                      {room.bedType} Bed Suite ({room.acType}) — Suite {room.roomNumber}
                     </div>
                   </td>
-                  <td style={{ padding: '12px 8px', textAlign: 'center' }}>{duration}</td>
-                  <td style={{ padding: '12px 8px', textAlign: 'right' }}>${room.rate?.toFixed(2)}</td>
-                  <td style={{ padding: '12px 8px', textAlign: 'right', fontWeight: '600' }}>
+                  <td style={{ padding: '14px 8px', textAlign: 'center' }}>{duration}</td>
+                  <td style={{ padding: '14px 8px', textAlign: 'right' }}>${room.rate?.toFixed(2)}</td>
+                  <td style={{ padding: '14px 8px', textAlign: 'right', fontWeight: '500' }}>
                     ${roomCharges.toFixed(2)}
                   </td>
                 </tr>
 
-                {/* Catering Consumptions Rows */}
                 {consumptions.length > 0 ? (
                   consumptions.map((item, idx) => (
-                    <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                      <td style={{ padding: '10px 8px' }}>
+                    <tr key={idx} style={{ borderBottom: '1px solid var(--border-hairline)' }}>
+                      <td style={{ padding: '12px 8px' }}>
                         <div>{item.itemName}</div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                          Catering • {item.date} {item.time}
+                        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                          In-Room Dining • {item.date} {item.time}
                         </div>
                       </td>
-                      <td style={{ padding: '10px 8px', textAlign: 'center' }}>{item.quantity}</td>
-                      <td style={{ padding: '10px 8px', textAlign: 'right' }}>${item.unitPrice?.toFixed(2)}</td>
-                      <td style={{ padding: '10px 8px', textAlign: 'right' }}>${item.amount.toFixed(2)}</td>
+                      <td style={{ padding: '12px 8px', textAlign: 'center' }}>{item.quantity}</td>
+                      <td style={{ padding: '12px 8px', textAlign: 'right' }}>${item.unitPrice?.toFixed(2)}</td>
+                      <td style={{ padding: '12px 8px', textAlign: 'right' }}>${item.amount.toFixed(2)}</td>
                     </tr>
                   ))
                 ) : (
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                    <td colSpan={4} style={{ padding: '8px', color: 'var(--text-muted)', fontStyle: 'italic', fontSize: '0.8rem' }}>
-                      No additional catering consumed during this stay.
+                  <tr style={{ borderBottom: '1px solid var(--border-hairline)' }}>
+                    <td colSpan={4} style={{ padding: '10px 8px', color: 'var(--text-muted)', fontStyle: 'italic', fontSize: '0.78rem' }}>
+                      No additional in-room dining logged during stay.
                     </td>
                   </tr>
                 )}
@@ -209,88 +209,66 @@ export default function InvoiceModal({ isOpen, onClose, billData }) {
             </table>
           </div>
 
-          {/* Totals & Net Balance Section */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginBottom: '24px'
-          }}>
+          {/* Net Settlement Balance */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '32px' }}>
             <div style={{ width: '320px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                <span>Room Charges:</span>
-                <span style={{ color: 'var(--text-main)' }}>${roomCharges.toFixed(2)}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                <span>Suite Charges:</span>
+                <span style={{ color: 'var(--text-primary)' }}>${roomCharges.toFixed(2)}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                <span>Catering & Food:</span>
-                <span style={{ color: 'var(--text-main)' }}>${foodCharges.toFixed(2)}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                <span>In-Room Dining:</span>
+                <span style={{ color: 'var(--text-primary)' }}>${foodCharges.toFixed(2)}</span>
               </div>
 
               {discount > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '0.9rem', color: '#fbbf24' }}>
-                  <span>Frequent Guest Discount:</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '0.85rem', color: 'var(--accent-gold)' }}>
+                  <span>Loyalty Discount:</span>
                   <span>- ${discount.toFixed(2)}</span>
                 </div>
               )}
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderTop: '1px solid var(--border-subtle)', fontWeight: '600', fontSize: '1rem' }}>
-                <span>Total Bill Amount:</span>
-                <span style={{ color: 'var(--gold-light)' }}>${totalAmount.toFixed(2)}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderTop: '1px solid var(--border-hairline)', fontSize: '0.95rem', fontWeight: '500' }}>
+                <span>Gross Total:</span>
+                <span>${totalAmount.toFixed(2)}</span>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '0.9rem', color: '#34d399' }}>
-                <span>Advance Paid at Check-in:</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '0.85rem', color: 'var(--accent-pine)' }}>
+                <span>Advance Paid:</span>
                 <span>- ${advancePaid.toFixed(2)}</span>
               </div>
 
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                padding: '12px 14px',
-                marginTop: '8px',
-                background: 'linear-gradient(135deg, rgba(197, 160, 89, 0.15) 0%, rgba(197, 160, 89, 0.05) 100%)',
-                border: '1px solid var(--gold-primary)',
-                borderRadius: 'var(--radius-sm)',
-                fontWeight: '700',
-                fontSize: '1.15rem'
+                padding: '14px 18px',
+                marginTop: '10px',
+                background: 'var(--bg-surface)',
+                border: '1px solid var(--border-hairline)'
               }}>
-                <span style={{ color: 'var(--gold-light)' }}>Balance Amount Payable:</span>
-                <span style={{ color: balanceAmount <= 0 ? '#34d399' : '#fff' }}>
+                <span style={{ fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: '500' }}>
+                  Net Balance Settled:
+                </span>
+                <span style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', fontWeight: '600' }}>
                   ${balanceAmount.toFixed(2)}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Footer note */}
+          {/* Footer */}
           <div style={{
-            borderTop: '1px dashed rgba(255, 255, 255, 0.15)',
-            paddingTop: '16px',
+            borderTop: '1px solid var(--border-hairline)',
+            paddingTop: '24px',
             textAlign: 'center',
-            fontSize: '0.8rem',
-            color: 'var(--text-muted)'
+            fontSize: '0.78rem',
+            color: 'var(--text-secondary)'
           }}>
-            <p>Thank you for choosing The Grand Horizon. We look forward to welcoming you back on your next visit.</p>
-            <p style={{ marginTop: '4px', fontSize: '0.72rem' }}>
-              Automated System Generated Folio • Valid without physical signature • Payment received in full.
+            <p>We thank you for gracing The Grand Horizon with your stay.</p>
+            <p style={{ marginTop: '4px', fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+              Automated 5-Star Hotel Folio • Settled in Full
             </p>
           </div>
-        </div>
-
-        {/* Modal Bottom Actions */}
-        <div className="no-print" style={{
-          padding: '16px 24px',
-          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          display: 'flex',
-          justifyContent: 'flex-end',
-          gap: '12px',
-          background: 'rgba(255, 255, 255, 0.02)'
-        }}>
-          <button onClick={onClose} className="btn-secondary">
-            Close Folio
-          </button>
-          <button onClick={handlePrint} className="btn-gold">
-            <Printer size={16} /> Print Official Bill
-          </button>
         </div>
       </div>
     </div>
