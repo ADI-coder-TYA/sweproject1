@@ -355,6 +355,9 @@ class HotelService {
     const totalAmount = Number((grossTotal - discount).toFixed(2));
     const balanceAmount = Number((totalAmount - advancePaid).toFixed(2));
 
+    // Check if an existing settled bill exists for this token
+    const existingBill = db.prepare(`SELECT * FROM bills WHERE tokenNumber = ?`).get(tokenNumber);
+
     return {
       guest,
       room,
@@ -370,6 +373,9 @@ class HotelService {
       advancePaid,
       totalAmount,
       balanceAmount,
+      billNumber: existingBill ? existingBill.billNumber : null,
+      generatedAt: existingBill ? existingBill.generatedAt : null,
+      isSettled: !!existingBill,
     };
   }
 

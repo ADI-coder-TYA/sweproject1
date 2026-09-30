@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export default function ManagerPortal({ hotelData, onDataChange }) {
+  const tariffFormRef = useRef(null);
+
   const currentMonthNum = new Date().getMonth() + 1;
   const currentYearNum = new Date().getFullYear();
 
@@ -224,7 +226,7 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
         </div>
 
         {/* DYNAMIC PERCENTAGE TARIFF REVISION CARD */}
-        <div className="editorial-card" style={{ padding: '36px' }}>
+        <div ref={tariffFormRef} className="editorial-card" style={{ padding: '36px' }}>
           <div style={{ marginBottom: '24px', borderBottom: '1px solid var(--border-hairline)', paddingBottom: '16px' }}>
             <span className="eyebrow">Tariff Calibration</span>
             <h3 className="font-serif" style={{ fontSize: '1.4rem' }}>Dynamic Rate Revision Engine</h3>
@@ -370,6 +372,7 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
                 <th style={{ padding: '12px 10px' }}>Climate Control</th>
                 <th style={{ padding: '12px 10px', textAlign: 'right' }}>Active Tariff / Night</th>
                 <th style={{ padding: '12px 10px', textAlign: 'center' }}>Room Allotment</th>
+                <th style={{ padding: '12px 10px', textAlign: 'center' }}>Calibration</th>
               </tr>
             </thead>
             <tbody>
@@ -389,6 +392,19 @@ export default function ManagerPortal({ hotelData, onDataChange }) {
                   </td>
                   <td style={{ padding: '14px 10px', textAlign: 'center', color: 'var(--text-secondary)' }}>
                     6 Suites
+                  </td>
+                  <td style={{ padding: '14px 10px', textAlign: 'center' }}>
+                    <button
+                      type="button"
+                      className="btn-editorial-secondary"
+                      style={{ fontSize: '0.62rem', padding: '4px 10px' }}
+                      onClick={() => {
+                        setTargetTariffId(t.tariffId);
+                        tariffFormRef.current?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    >
+                      Calibrate Rate
+                    </button>
                   </td>
                 </tr>
               ))}

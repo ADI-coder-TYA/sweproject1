@@ -17,6 +17,8 @@ export default function App() {
   const [preFillData, setPreFillData] = useState(null);
   const [heroApologyData, setHeroApologyData] = useState(null);
   const [showHeroApology, setShowHeroApology] = useState(false);
+  const [activeCateringToken, setActiveCateringToken] = useState('');
+  const [inquiryEmail, setInquiryEmail] = useState('');
 
   const heroRef = useRef(null);
   const portalRef = useRef(null);
@@ -56,6 +58,16 @@ export default function App() {
     }, 60);
   };
 
+  const handleNavigateToCatering = (tokenNum) => {
+    setActiveCateringToken(tokenNum);
+    setActiveTab('catering');
+    setTimeout(() => {
+      if (portalRef.current) {
+        portalRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 60);
+  };
+
   const handleShowApology = (data) => {
     setHeroApologyData(data);
     setShowHeroApology(true);
@@ -72,7 +84,10 @@ export default function App() {
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
         hotelData={hotelData} 
-        onBookClick={scrollToWorkstation}
+        onBookClick={() => {
+          setActiveTab('receptionist');
+          scrollToWorkstation();
+        }}
       />
 
       {/* Cinematic Hero Container with Integrated Interactive Availability Bar */}
@@ -104,6 +119,7 @@ export default function App() {
                   hotelData={hotelData} 
                   onDataChange={fetchHotelData} 
                   preFillData={preFillData}
+                  onNavigateToCatering={handleNavigateToCatering}
                 />
               )}
 
@@ -111,6 +127,7 @@ export default function App() {
                 <CateringPortal 
                   hotelData={hotelData} 
                   onDataChange={fetchHotelData} 
+                  selectedTokenProp={activeCateringToken}
                 />
               )}
 
@@ -200,6 +217,8 @@ export default function App() {
               <input
                 type="email"
                 placeholder="Enter email address"
+                value={inquiryEmail}
+                onChange={(e) => setInquiryEmail(e.target.value)}
                 style={{
                   background: 'transparent',
                   border: 'none',
@@ -212,6 +231,14 @@ export default function App() {
               />
               <button
                 type="button"
+                onClick={() => {
+                  if (!inquiryEmail || !inquiryEmail.includes('@')) {
+                    alert('Please enter a valid email address to receive private suite inquiries.');
+                    return;
+                  }
+                  alert(`Thank you for your private inquiry. Our concierge will be in touch with you at ${inquiryEmail} shortly.`);
+                  setInquiryEmail('');
+                }}
                 style={{
                   background: 'transparent',
                   border: 'none',

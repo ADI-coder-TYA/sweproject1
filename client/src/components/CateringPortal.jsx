@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-export default function CateringPortal({ hotelData, onDataChange }) {
+export default function CateringPortal({ hotelData, onDataChange, selectedTokenProp }) {
+  const orderFormRef = useRef(null);
+
   const [menu, setMenu] = useState([]);
-  const [selectedToken, setSelectedToken] = useState('');
+  const [selectedToken, setSelectedToken] = useState(selectedTokenProp || '');
   const [selectedItemId, setSelectedItemId] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [orderDate, setOrderDate] = useState(new Date().toISOString().split('T')[0]);
@@ -13,6 +15,14 @@ export default function CateringPortal({ hotelData, onDataChange }) {
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Handle selectedTokenProp from other views
+  useEffect(() => {
+    if (selectedTokenProp) {
+      setSelectedToken(selectedTokenProp);
+      orderFormRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedTokenProp]);
 
   // Fetch catering menu items
   const fetchMenu = async () => {
@@ -118,7 +128,7 @@ export default function CateringPortal({ hotelData, onDataChange }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px, 1fr))', gap: '32px' }}>
         
         {/* LOG FOOD ORDER */}
-        <div className="editorial-card" style={{ padding: '36px' }}>
+        <div ref={orderFormRef} className="editorial-card" style={{ padding: '36px' }}>
           <div style={{ marginBottom: '28px', borderBottom: '1px solid var(--border-hairline)', paddingBottom: '16px' }}>
             <span className="eyebrow">Order Entry</span>
             <h3 className="font-serif" style={{ fontSize: '1.4rem' }}>Log Guest Food Consumption</h3>
@@ -182,16 +192,29 @@ export default function CateringPortal({ hotelData, onDataChange }) {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
               <div className="form-group-editorial">
                 <label className="form-label-editorial">Quantity</label>
-                <input
-                  id="input-food-quantity"
-                  type="number"
-                  min="1"
-                  max="20"
-                  className="editorial-input"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                  required
-                />
+                <div style={{ display: 'flex', border: '1px solid var(--border-hairline)' }}>
+                  <button
+                    type="button"
+                    style={{ padding: '0 10px', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '1rem', color: 'var(--text-primary)' }}
+                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                  >-</button>
+                  <input
+                    id="input-food-quantity"
+                    type="number"
+                    min="1"
+                    max="20"
+                    className="editorial-input"
+                    style={{ border: 'none', textAlign: 'center', padding: '10px 4px' }}
+                    value={quantity}
+                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    required
+                  />
+                  <button
+                    type="button"
+                    style={{ padding: '0 10px', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '1rem', color: 'var(--text-primary)' }}
+                    onClick={() => setQuantity(q => Math.min(20, q + 1))}
+                  >+</button>
+                </div>
               </div>
 
               <div className="form-group-editorial">
@@ -371,9 +394,22 @@ export default function CateringPortal({ hotelData, onDataChange }) {
                 </div>
               </div>
 
-              <strong style={{ color: 'var(--text-primary)', fontSize: '0.95rem', marginLeft: '16px' }}>
-                ${item.price.toFixed(2)}
-              </strong>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '12px' }}>
+                <strong style={{ color: 'var(--text-primary)', fontSize: '0.95rem' }}>
+                  ${item.price.toFixed(2)}
+                </strong>
+                <button
+                  type="button"
+                  className="btn-editorial-secondary"
+                  style={{ fontSize: '0.62rem', padding: '4px 10px', whiteSpace: 'nowrap' }}
+                  onClick={() => {
+                    setSelectedItemId(item.itemId);
+                    orderFormRef.current?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  Select Item
+                </button>
+              </div>
             </div>
           ))}
         </div>

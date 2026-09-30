@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ApologyModal from './ApologyModal';
 import InvoiceModal from './InvoiceModal';
 
-export default function ReceptionistPortal({ onDataChange, hotelData, preFillData }) {
+export default function ReceptionistPortal({ onDataChange, hotelData, preFillData, onNavigateToCatering }) {
+  const formRef = useRef(null);
+  const guestNameInputRef = useRef(null);
+
   // Form State
   const [formData, setFormData] = useState({
     name: '',
@@ -23,6 +26,8 @@ export default function ReceptionistPortal({ onDataChange, hotelData, preFillDat
         ...prev,
         ...preFillData
       }));
+      formRef.current?.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => guestNameInputRef.current?.focus(), 150);
     }
   }, [preFillData]);
 
@@ -204,7 +209,7 @@ export default function ReceptionistPortal({ onDataChange, hotelData, preFillDat
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px, 1fr))', gap: '32px' }}>
         
         {/* REGISTRATION & ALLOTMENT CARD */}
-        <div className="editorial-card" style={{ padding: '36px' }}>
+        <div ref={formRef} className="editorial-card" style={{ padding: '36px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', borderBottom: '1px solid var(--border-hairline)', paddingBottom: '16px' }}>
             <div>
               <span className="eyebrow">Suite Allocation</span>
@@ -255,6 +260,7 @@ export default function ReceptionistPortal({ onDataChange, hotelData, preFillDat
               <div className="form-group-editorial">
                 <label className="form-label-editorial">Guest Full Name *</label>
                 <input
+                  ref={guestNameInputRef}
                   id="input-guest-name"
                   type="text"
                   required
@@ -446,6 +452,26 @@ export default function ReceptionistPortal({ onDataChange, hotelData, preFillDat
                   <span style={{ color: 'var(--text-secondary)' }}>Guest: </span>
                   <strong>{allotmentResult.guest.name}</strong>
                 </div>
+              </div>
+
+              {/* Action Handlers */}
+              <div style={{ marginTop: '16px', paddingTop: '14px', borderTop: '1px solid var(--border-hairline)', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  className="btn-editorial-secondary"
+                  style={{ fontSize: '0.68rem', padding: '6px 12px' }}
+                  onClick={() => onNavigateToCatering && onNavigateToCatering(allotmentResult.token.tokenNumber)}
+                >
+                  Order In-Room Dining for this Token →
+                </button>
+                <button
+                  type="button"
+                  className="btn-editorial-secondary"
+                  style={{ fontSize: '0.68rem', padding: '6px 12px' }}
+                  onClick={() => handlePreviewBill(allotmentResult.token.tokenNumber)}
+                >
+                  Preview Folio & Departure →
+                </button>
               </div>
             </div>
           )}
@@ -674,12 +700,13 @@ export default function ReceptionistPortal({ onDataChange, hotelData, preFillDat
                     className="btn-editorial-secondary"
                     style={{ fontSize: '0.65rem', padding: '6px 8px', marginTop: '8px' }}
                     onClick={() => {
-                      setFormData({
-                        ...formData,
+                      setFormData(prev => ({
+                        ...prev,
                         bedType: room.bedType,
                         acType: room.acType,
-                      });
-                      window.scrollTo({ top: 400, behavior: 'smooth' });
+                      }));
+                      formRef.current?.scrollIntoView({ behavior: 'smooth' });
+                      setTimeout(() => guestNameInputRef.current?.focus(), 150);
                     }}
                   >
                     Quick Reserve
