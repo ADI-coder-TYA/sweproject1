@@ -1,0 +1,27 @@
+{
+  "name": "hotel-automation-system",
+  "version": "1.0.0",
+  "description": "5-Star Hotel Automation System matching UML Sequence, Statechart, Use Case and Class Diagrams",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "build": "npm --prefix client install && npm --prefix client run build",
+    "seed": "node server/seed.js",
+    "dev:server": "node server/server.js",
+    "dev:client": "npm --prefix client run dev"
+  },
+  "keywords": [
+    "hotel-automation",
+    "5-star-hotel",
+    "uml-software-engineering"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1"
+  }
+}
